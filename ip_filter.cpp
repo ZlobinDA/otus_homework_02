@@ -75,6 +75,22 @@ public:
 		return false;
 	}
 
+	unsigned int get_firstByte() const {
+		return firstByte;
+	}
+
+	unsigned int get_secondByte() const {
+		return secondByte;
+	}
+
+	unsigned int get_thirdByte() const {
+		return thirdByte;
+	}
+
+	unsigned int get_fourthByte() const {
+		return fourthByte;
+	}
+
 	std::string get_IPAddress() const {
 		return  std::to_string(firstByte) + "." + 
 				std::to_string(secondByte) + "." + 
@@ -123,21 +139,20 @@ private:
 
 int main(int, char*[]) {
 	try {
-		
 		std::vector<IPAddress> ip_pool;
 		//ip_pool.emplace_back("2.1.2.1");
 		//ip_pool.emplace_back("1.1.1.1");
 		//ip_pool.emplace_back("1.2.1.1");
 		for (std::string line; std::getline(std::cin, line);) {
-			// Извлекам поля из строки. Поля разделены символом табуляции.
+			// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ пїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ. пїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ.
 			std::vector<std::string> v = split(line, '\t');
-			// Добавляем первое поле (поле с IP адресами) в вектор.
+			// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅ (пїЅпїЅпїЅпїЅ пїЅ IP пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ) пїЅ пїЅпїЅпїЅпїЅпїЅпїЅ.
 			ip_pool.emplace_back(v.at(0));
 		}
 
 		// reverse lexicographically sort
-		// Добавляем IP адреса в множество. В множестве используется пользовательская функция сравнения. 
-		std::set<IPAddress> ip_pool_reverseSorted;
+		// пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ IP пїЅпїЅпїЅпїЅпїЅпїЅ пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ. пїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅ пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ. 
+		std::multiset<IPAddress> ip_pool_reverseSorted;
 		for (const auto& ip : ip_pool) {
 			ip_pool_reverseSorted.insert(ip);
 		}
@@ -155,20 +170,15 @@ int main(int, char*[]) {
 		// 1.1.234.8
 
 		// TODO filter by first byte and output
+		// std::cout << "===========================" << std::endl;
+		std::vector<IPAddress> ip_pool_firstByteSorted;
+		unsigned int firstByte = 1;
+		std::copy_if(ip_pool_reverseSorted.begin(), ip_pool_reverseSorted.end(), std::back_inserter(ip_pool_firstByteSorted),
+			[firstByte](const IPAddress& ip) { return ip.get_firstByte() == firstByte; });
 
-
-		std::cout << "===========================" << std::endl;
-
-
-		//std::vector<IPAddress> ip_pool_firstByteSorted;
-		//int firstByte = 1;
-		//std::copy_if(ip_pool_reverseSorted.begin(), ip_pool_reverseSorted.end(), std::back_inserter(ip_pool_firstByteSorted),
-		//	[firstByte](const IPAddress& ip) { return ip.firstByte == firstByte; });
-
-		//for (auto& ip : ip_pool_firstByteSorted) {
-		//	std::cout << ip.get_IPAddress() << std::endl;
-		//}
-
+		for (auto& ip : ip_pool_firstByteSorted) {
+			std::cout << ip.get_IPAddress() << std::endl;
+		}
 		// 1.231.69.33
 		// 1.87.203.225
 		// 1.70.44.170
@@ -176,44 +186,35 @@ int main(int, char*[]) {
 		// 1.1.234.8
 
 		// TODO filter by first and second bytes and output
-		// ip = filter(46, 70)
+		// std::cout << "***********************************" << std::endl;
+		ip_pool_firstByteSorted.clear();
+		firstByte = 46;
+		unsigned int secondByte = 70;
+		std::copy_if(ip_pool_reverseSorted.begin(), ip_pool_reverseSorted.end(), std::back_inserter(ip_pool_firstByteSorted),
+			[firstByte, secondByte](const IPAddress& ip) {
+				return (ip.get_firstByte() == firstByte) && (ip.get_secondByte() == secondByte); 
+				});
 
-
-		std::cout << "***********************************" << std::endl;
-
-
-		//ip_pool_firstByteSorted.clear();
-		//firstByte = 46;
-		//int secondByte = 70;
-		//std::copy_if(ip_pool_reverseSorted.begin(), ip_pool_reverseSorted.end(), std::back_inserter(ip_pool_firstByteSorted),
-		//	[firstByte, secondByte](const IPAddress& ip) { return (ip.firstByte == firstByte) && (ip.secondByte == secondByte); });
-
-		//for (auto& ip : ip_pool_firstByteSorted) {
-		//	std::cout << ip.get_IPAddress() << std::endl;
-		//}
-
+		for (auto& ip : ip_pool_firstByteSorted) {
+			std::cout << ip.get_IPAddress() << std::endl;
+		}
 		// 46.70.225.39
 		// 46.70.147.26
 		// 46.70.113.73
 		// 46.70.29.76
 
 		// TODO filter by any byte and output
-
-
-		std::cout << "---------------------------------------------" << std::endl;
-
-
-		//ip_pool_firstByteSorted.clear();
-		//const int anyByte = 46;
-		//std::copy_if(ip_pool_reverseSorted.begin(), ip_pool_reverseSorted.end(), std::back_inserter(ip_pool_firstByteSorted),
-		//	[anyByte](const IPAddress& ip) { 
-		//		return (ip.firstByte == anyByte) || (ip.secondByte == anyByte) || (ip.thirdByte == anyByte) || (ip.fourthByte == anyByte);
-		//	});
-
-		//for (auto& ip : ip_pool_firstByteSorted) {
-		//	std::cout << ip.get_IPAddress() << std::endl;
-		//}
-
+		// std::cout << "---------------------------------------------" << std::endl;
+		ip_pool_firstByteSorted.clear();
+		unsigned int anyByte = 46;
+		std::copy_if(ip_pool_reverseSorted.begin(), ip_pool_reverseSorted.end(), std::back_inserter(ip_pool_firstByteSorted),
+			[anyByte](const IPAddress& ip) { 
+				return (ip.get_firstByte() == anyByte) || (ip.get_secondByte() == anyByte) ||
+				 (ip.get_thirdByte() == anyByte) || (ip.get_fourthByte() == anyByte);
+			});
+		for (auto& ip : ip_pool_firstByteSorted) {
+			std::cout << ip.get_IPAddress() << std::endl;
+		}
 		// 186.204.34.46
 		// 186.46.222.194
 		// 185.46.87.231
